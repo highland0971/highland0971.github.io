@@ -25,8 +25,8 @@ iptables -I FORWARD -i eth0 -p tcp -m tcp --tcp-flags RST RST -j LOG --log-prefi
 2. 将监测到的被干扰IP加入策略路由或iptables端口重定向(基于**ss-redir**实现)
 - IP策略路由
 ```sh
-export GFW_LOCAL_GATEWAY=\[Replace with your free Internat access gateway ip]
-export GFW_REMOTE_VPN=\[Replace with your remote ss-server ip]
+export GFW_LOCAL_GATEWAY=[Replace with your free Internat access gateway ip]
+export GFW_REMOTE_VPN=[Replace with your remote ss-server ip]
 
 watch -n 1 dmesg -c|grep GFW_DECT|grep -v $GFW_REMOTE_VPN|\
         awk '/GFW_DECT_SYN/{print $5};/GFW_DECT_RST/{print $4}'|\
@@ -38,10 +38,11 @@ watch -n 1 dmesg -c|grep GFW_DECT|grep -v $GFW_REMOTE_VPN|\
 
 ```
 
-在以上的配置中，是将识别出来的受干扰IP路由给了另外一个装着shadowsocks的路由器，尤其使用ss-redir进行透明转发，配置如下：
+3. 在以上的配置中，是将识别出来的受干扰IP路由给了另外一个装着shadowsocks的路由器，由其使用ss-redir进行透明转发
+配置如下：
 ```sh
-export GFW_LOCAL_GATEWAY=\[Replace with your free Internat access gateway ip]
-export GFW_REMOTE_VPN=\[Replace with your remote ss-server ip]
-sudo ss-nat -s $GFW_REMOTE_VPN -l \[Your ss-redir local listening port] -b $GFW_REMOTE_VPN -u
-sudo nohup ss-redir -s $GFW_REMOTE_VPN -p \[Your ss-server listening port] -k \[Your ss-server password] -m \[Your ss-server crypto method] -l \[Your ss-redir local listening port] -b 0.0.0.0 -u
+export GFW_LOCAL_GATEWAY=[Replace with your free Internat access gateway ip]
+export GFW_REMOTE_VPN=[Replace with your remote ss-server ip]
+sudo ss-nat -s $GFW_REMOTE_VPN -l [Your ss-redir local listening port] -b $GFW_REMOTE_VPN -u
+sudo nohup ss-redir -s $GFW_REMOTE_VPN -p [Your ss-server listening port] -k [Your ss-server password] -m [Your ss-server crypto method] -l [Your ss-redir local listening port] -b 0.0.0.0 -u
 ```
