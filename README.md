@@ -34,4 +34,4 @@ watch -n 1 dmesg -c|grep GFW_DECT|grep -v $GFW_REMOTE_VPN|\
                 route add "$2" gateway "ENVIRON["GFW_GATEWAY"]" >/dev/null 2>&1"}; \
                 print(cmd);system(cmd)}'
 
-
+```
