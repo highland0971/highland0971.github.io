@@ -35,14 +35,15 @@ watch -n 1 dmesg -c|grep GFW_DECT|grep -v $GFW_REMOTE_VPN|\
                 else{cmd="route -n|grep "$2" || ping -c 1 -W 1 "$2"  >/dev/null 2>&1 || \
                 route add "$2" gateway "ENVIRON["GFW_LOCAL_GATEWAY"]" >/dev/null 2>&1"}; \
                 print(cmd);system(cmd)}'
-
 ```
 
-3. 在以上的配置中，是将识别出来的受干扰IP路由给了另外一个装着shadowsocks的路由器，由其使用ss-redir进行透明转发
+3. 在以上的配置中，是将识别出来的受干扰IP路由给了另外一个装着**shadowsocks**的路由器，由其使用**ss-redir**进行透明转发
 配置如下：
 ```sh
 export GFW_LOCAL_GATEWAY=[Replace with your free Internat access gateway ip]
 export GFW_REMOTE_VPN=[Replace with your remote ss-server ip]
 sudo ss-nat -s $GFW_REMOTE_VPN -l [Your ss-redir local listening port] -b $GFW_REMOTE_VPN -u
-sudo nohup ss-redir -s $GFW_REMOTE_VPN -p [Your ss-server listening port] -k [Your ss-server password] -m [Your ss-server crypto method] -l [Your ss-redir local listening port] -b 0.0.0.0 -u
+sudo nohup ss-redir -s $GFW_REMOTE_VPN -p [Your ss-server listening port] \
+                    -k [Your ss-server password] -m [Your ss-server crypto method] \
+                    -l [Your ss-redir local listening port] -b 0.0.0.0 -u
 ```
