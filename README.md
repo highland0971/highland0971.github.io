@@ -1,12 +1,10 @@
-## Welcome to GitHub Pages
+## Blog of highland0971
 
-You can use the [editor on GitHub](https://github.com/highland0971/highland0971.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+### 基于无IP list的GFW IP解锁
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+在以往的基于路由、iptables解锁GFW IP封锁的方法中，均需要一份国内或国外的IP地址列表，然后进行策略路由。基于这种方案的解锁，需要人工去维护一张IP地址列表，其中基于[chnroutes](https://github.com/fivesheep/chnroutes)方案生成的国内IP地址列表就有8000多条记录,在加载的时候会比较耗时，同时给路由器带来一定负担。
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+本文给出一种基于无IP列表的自动IP访问监测及路由更变策略，详情如下：
 
 ```markdown
 Syntax highlighted code block
@@ -14,6 +12,12 @@ Syntax highlighted code block
 # Header 1
 ## Header 2
 ### Header 3
+
+- iptables -I FORWARD -i br0 -o eth0 -p tcp -m tcp --tcp-flags SYN,ACK SYN -m recent --rcheck --seconds 15 --hitcount 3 --name syn_watch_list --rdest -j LOG --log-prefix "GFW_DECT_SYN "
+- iptables -I FORWARD -i br0 -o eth0 -p tcp -m tcp --tcp-flags SYN,ACK SYN -m recent --set --name syn_watch_list --rdest
+- iptables -I FORWARD -i br0 -o eth0 -p tcp -m tcp --tcp-flags SYN,ACK SYN -j LOG --log-prefix "GFW_DEBUG "
+- iptables -I FORWARD -i eth0 -p tcp -m tcp --tcp-flags RST RST -j LOG --log-prefix "GFW_DECT_RST "
+
 
 - Bulleted
 - List
