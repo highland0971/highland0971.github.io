@@ -1,6 +1,4 @@
-## Blog of highland0971
-
-### 基于无IP list的GFW IP解锁
+## 基于无预置IP list的GFW IP解锁方法
 
 在以往的基于路由、iptables解锁GFW IP封锁的方法中，均需要一份国内或国外的IP地址列表，然后进行策略路由。基于这种方案的解锁，需要人工去维护一张IP地址列表，其中基于[chnroutes](https://github.com/fivesheep/chnroutes)方案生成的国内IP地址列表就有8000多条记录,在加载的时候会比较耗时，同时给路由器带来一定负担。
 
@@ -23,7 +21,6 @@ iptables -I FORWARD -i eth0 -p tcp -m tcp --tcp-flags RST RST -j LOG --log-prefi
 ```
 
 2. 将监测到的被干扰IP加入策略路由或iptables端口重定向(基于**ss-redir**实现)
-- IP策略路由
 ```sh
 export GFW_LOCAL_GATEWAY=[Replace with your free Internat access gateway ip]
 export GFW_REMOTE_VPN=[Replace with your remote ss-server ip]
@@ -39,6 +36,7 @@ watch -n 1 dmesg -c|grep GFW_DECT|grep -v $GFW_REMOTE_VPN|\
 
 3. 在以上的配置中，是将识别出来的受干扰IP路由给了另外一个装着**shadowsocks**的路由器，由其使用**ss-redir**进行透明转发
 配置如下：
+
 ```sh
 export GFW_LOCAL_GATEWAY=[Replace with your free Internat access gateway ip]
 export GFW_REMOTE_VPN=[Replace with your remote ss-server ip]
