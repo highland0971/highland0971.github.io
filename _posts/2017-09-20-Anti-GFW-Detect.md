@@ -1,3 +1,8 @@
+---
+layout: post
+title:  "基于无预置IP list的GFW IP解锁方法"
+date:   2017-09-20 16:16:01 -0600
+---
 ## 基于无预置IP list的GFW IP解锁方法
 
 在以往的基于路由、iptables解锁GFW IP封锁的方法中，均需要一份国内或国外的IP地址列表，然后进行策略路由。基于这种方案的解锁，需要人工去维护一张IP地址列表，其中基于[chnroutes](https://github.com/fivesheep/chnroutes)方案生成的国内IP地址列表就有8000多条记录,在加载的时候会比较耗时，同时给路由器带来一定负担。
