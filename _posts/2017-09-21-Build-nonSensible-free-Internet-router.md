@@ -8,7 +8,7 @@ tags: ["AsusMerlin","Shadowsocks"]
 
 具体实现步骤如下：
 
- ## 1. Asus Merlin AC-87U 干扰IP监测+自动策略路由配置
+## 1. Asus Merlin AC-87U 干扰IP监测+自动策略路由配置
 
 [《基于无预置IP list的GFW IP解锁方法》]({{ site.baseurl }}{% post_url 2017-09-20-Anti-GFW-Detect %})文中已经提到，实现无IP List的受干扰IP监测和路由转发主要分为两个步骤：
 
