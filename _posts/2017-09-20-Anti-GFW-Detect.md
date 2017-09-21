@@ -25,8 +25,8 @@ iptables -I FORWARD -i br0 -o eth0 -p tcp -m tcp --tcp-flags SYN,ACK SYN \
 iptables -I FORWARD -i eth0 -p tcp -m tcp --tcp-flags RST RST -j LOG --log-prefix "GFW_DECT_RST "
 ```
 
-### 2. 将监测到的被干扰IP加入策略路由或iptables端口重定向(基于**ss-redir**实现)
-
+### 2. 将监测到的被干扰IP加入策略路由（基于旁路路由）或iptables端口重定向(基于本地**ss-redir**实现)
+这里给出的是基于旁路路由的实现策略
 ```bash
 export GFW_LOCAL_GATEWAY=[Replace with your free Internat access gateway ip]
 export GFW_REMOTE_VPN=[Replace with your remote ss-server ip]
@@ -42,7 +42,7 @@ watch -n 1 dmesg -c|grep GFW_DECT|grep -v $GFW_REMOTE_VPN|\
 
 ### 3. 进行透明路由转发
 
-在以上的配置中，是将识别出来的受干扰IP路由给了另外一个装着**shadowsocks**的路由器，由其使用**ss-redir**进行透明转发配置如下：
+在以上的配置中，是将识别出来的受干扰IP路由给了另外一个装着**shadowsocks**的旁路路由器，由其使用**ss-redir**进行透明转发配置如下：
 
 ```bash
 export GFW_LOCAL_GATEWAY=[Replace with your free Internat access gateway ip]
