@@ -8,6 +8,6 @@ layout: default
 # Hello world
 
 {% for post in site.posts %}
-  - [{{ post.title | escape }}]({{ post.url | relative_url }})
-  
+  -[{{ post.tag }}] [{{ post.title | escape }}]({{ post.url | relative_url }})
+
 {% endfor %}
