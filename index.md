@@ -5,9 +5,10 @@
 layout: default
 ---
 
-# Hello world
-
 {% for post in site.posts %}
-  -[{{ post.tag }}] [{{ post.title | escape }}]({{ post.url | relative_url }})
+
+##  [ {{ post.date | date_to_string }} / {{ post.title | escape }}]({{ post.url | relative_url }})
+> {{post.excerpt}}
+
 
 {% endfor %}
