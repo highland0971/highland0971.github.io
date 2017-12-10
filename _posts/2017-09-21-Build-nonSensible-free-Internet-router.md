@@ -17,7 +17,7 @@ tags: ["AsusMerlin","Shadowsocks"]
 
 由于华硕Merlin固件仅支持在特定JFFS分区下进行用户数据读写，同时仅允许在系统启动时在`/jffs/scripts`和`/jffs/configs`加载指定脚本和配置数据。因此上述两个关键步骤，就需要在`/jffs/scripts`目录下的指定脚本中进行配置。具体如下：
 
-### 1.1  在`/jffs/firewall-start`脚本中配置iptables过滤策略
+### 1.1  在`/jffs/scripts/firewall-start`脚本中配置iptables过滤策略
 
 为了确保受干扰IP监测策略不被其他系统内置策略覆盖或影响，需要在路由器启动后并配置iptables默认策略后，将我们所需要的监测策略加入到Iptables的FORWARD链中,生效后通过`iptables-save`查看输出，应该可以看到在FORWARD链中已经增加了我们所需的4条指令。
 
@@ -52,7 +52,7 @@ COMMIT
 
 ```
 
-### 1.2 在`/jffs/service-start`脚本中配置策略路由
+### 1.2 在`/jffs/scripts/service-start`脚本中配置策略路由
 
 由于在本方案中AC-87U路由器并未内置[Shadowsocks](http://shadowsocks.org),无法实现路由器内的透明代理，因此我们需要将经iptables监测到的疑似受干扰目标ip的下一跳路由调整到装了[Shadowsocks](http://shadowsocks.org)的路由器中，也就是本文的RaspberryPi中。
 
