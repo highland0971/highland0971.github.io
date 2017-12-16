@@ -65,7 +65,7 @@ tags: ["Kubenetes","Calico"]
   4. Disable SeLinux by running ```sudo setenforce 0```
   5. Disable Swap file by disable swap sector in `/etc/fstab` and run 
   ```
-  swapoff -aV
+  sudo swapoff -aV
   ```
   6. Enable&Run docker and kubelet
   ```
