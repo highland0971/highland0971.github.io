@@ -55,6 +55,7 @@ tags: ["Kubenetes","Calico"]
   ```
   
   ## 3. Configure docker cgroup driver compalince with k8s
+  
   ```
   sudo vi /etc/docker/daemon.json
   #Past the following
