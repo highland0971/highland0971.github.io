@@ -5,7 +5,7 @@ date: 2017-12-16 14:16:01 +0800
 tags: ["Kubenetes","Calico"]
 ---
 
-1. Setup the kvm-qemu virtual machine with virt-install
+## 1. Setup the kvm-qemu virtual machine with virt-install
  
  ```
  virt-install -n master --memory 3072 --vcpus 2 \
@@ -21,7 +21,7 @@ tags: ["Kubenetes","Calico"]
   --extra-args='console=tty0 console=ttyS0,115200n8 serial'
   ```
   
-  2. Download Docker RPM and K8s Packages
+ ## 2. Download & install Docker RPM and K8s Packages
   
   ```
   cd && mkdir kube-packages
@@ -54,4 +54,13 @@ tags: ["Kubenetes","Calico"]
    sudo rpm -ivh *.rpm 
   ```
   
+  ## 3. Configure docker cgroup driver compalince with k8s
+  ```
+  sudo vi /etc/docker/daemon.json
+  #Past the following
+  {
+   "exec-opts": ["native.cgroupdriver=systemd"]
+  }
+  ```
+  
   
