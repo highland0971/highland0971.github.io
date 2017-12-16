@@ -54,19 +54,18 @@ tags: ["Kubenetes","Calico"]
    sudo rpm -ivh *.rpm 
   ```
   
-  3. Configure docker cgroup driver compalince with k8s, by add fowllowing into /etc/docker/daemon.json
+  3. Configure docker cgroup driver compalince with k8s, if is not specified in the systemd ExecStart cmd opts. Add fowllowing into /etc/docker/daemon.json
   
   ```
   {
    "exec-opts": ["native.cgroupdriver=systemd"]
   }
   ```
+  
   4. Disable SeLinux by running ```setenforce 0```
   5. Enable&Run docker and kubelet
   ```
   sudo systemctl enable docker && systemctl start docker
   sudo systemctl enable kubelet && systemctl start kubelet
   ```
-  
-  
   
