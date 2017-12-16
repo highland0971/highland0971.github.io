@@ -21,3 +21,37 @@ tags: ["Kubenetes","Calico"]
   --extra-args='console=tty0 console=ttyS0,115200n8 serial'
   ```
   
+  2. Download Docker RPM and K8s Packages
+  
+  ```
+  cd && mkdir kube-packages
+  ```
+  
+  ### For Docker
+  ```
+  yum reinstall --downloadonly  --downloaddir=./ docker 
+  ```
+  
+  ### For Kubenetes with kubeadm
+  ```
+  cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+  [kubernetes]
+  name=Kubernetes
+  baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+  enabled=1
+  gpgcheck=1
+  repo_gpgcheck=1
+  gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+  EOF
+  yum reinstall --downloadonly  --downloaddir=./ kubelet kubeadm kubectl
+  ```
+  ### scp package to air-gaped environment and install
+  ```
+   ssh user@host mkdir ~/packages
+   scp * user@host:~/packages
+   ssh user@host
+   cd ~/packages
+   sudo rpm -ivh *.rpm 
+  ```
+  
+  
