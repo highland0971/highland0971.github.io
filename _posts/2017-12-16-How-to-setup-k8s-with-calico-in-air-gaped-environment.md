@@ -35,7 +35,6 @@ tags: ["Kubenetes","Calico"]
   sudo reboot
   ```
   
-  
   3. Configure docker cgroup driver compalince with k8s, if is not specified in the systemd ExecStart cmd opts. Add fowllowing into /etc/docker/daemon.json
   
   ```
@@ -64,3 +63,17 @@ tags: ["Kubenetes","Calico"]
   sudo systemctl enable kubelet && sudo systemctl start kubelet
   ```
   
+  7. Get local registry image from docker.io and start up
+  
+  This images need firewalld service started up to setup iptable rules
+  
+  ```
+  docker pull registry:latest
+  docker save docker.io/registry > docker-io-registry.tar
+  scp docker-io-registry.tar user@host:~/
+  ssh user@host
+  docker load -i ~/docker-io-registry.tar
+  sudo mkdir /mnt/docker-images
+  sudo chown $USER@docker /mnt/docker-images
+  docker run -d --restart=always -p 5000:5000 -v /mnt/docker-images:/var/lib/registry --name local-registry registry
+  ```
