@@ -20,6 +20,7 @@ tags: ["Kubenetes","Calico"]
   
   ```
   cd && mkdir kube-packages
+  ````
   
   ### For Docker
   
@@ -48,19 +49,30 @@ tags: ["Kubenetes","Calico"]
   ```
   sudo setenforce 0
   sudo vi /etc/selinux/config
-  SELINUX=disabled
+  # set SELINUX=disabled
   ```
-  Enable ipv4 forwarding sysctl, net.ipv4.ip_forward = 1
+  SELINUX must be set disabled, otherwise the docker contianer can not access host path file , encounter problems like level=fatal msg="open /cert/ca.crt: permission denied"
   
+  Enable ipv4 forwarding by sysctl, net.ipv4.ip_forward = 1
   
   5. Disable Swap file by disable swap sector in `/etc/fstab` and run 
   ```
   sudo swapoff -aV
   ```
-  6. Enable&Run docker and kubelet
+  
+  6. Enable&Run docker and kubelet
   ```
   sudo systemctl enable docker && sudo systemctl start docker
   sudo systemctl enable kubelet && sudo systemctl start kubelet
+  ```
+  
+  7. Generate certificates for local registry
+  ```
+  openssl genrsa -out ca.key 2048
+ 
+  #Replace ${MASTER_IP} with host ip or name 
+  openssl req -x509 -new -nodes -key ca.key -subj "/CN=${MASTER_IP}" -days 10000 -out ca.crt
+
   ```
   
   7. Get local registry image from docker.io and start up
