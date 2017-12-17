@@ -75,5 +75,11 @@ tags: ["Kubenetes","Calico"]
   docker load -i ~/docker-io-registry.tar
   sudo mkdir /mnt/docker-images
   sudo chown $USER@docker /mnt/docker-images
-  docker run -d --restart=always -p 5000:5000 -v /mnt/docker-images:/var/lib/registry --name local-registry registry
+  docker run -d --restart=always \
+  -v /mnt/docker-images:/var/lib/registry \
+  -v /cert:/cert --name local-registry registry \
+  -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/cert/ca.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/cert/ca.key \
+  -p 5000:443
   ```
