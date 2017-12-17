@@ -68,7 +68,9 @@ tags: ["Kubenetes","Calico"]
   
   7. Generate certificates for local registry
   ```
-  openssl genrsa -out ca.key 2048
+  sudo mkdir /var/cert
+  sudo chown root:docker /var/cert -R
+  openssl genrsa -out ca.key 2048
  
   #Replace ${MASTER_IP} with host ip or name 
   openssl req -x509 -new -nodes -key ca.key -subj "/CN=${MASTER_IP}" -days 10000 -out ca.crt
@@ -87,11 +89,10 @@ tags: ["Kubenetes","Calico"]
   docker load -i ~/docker-io-registry.tar
   sudo mkdir /mnt/docker-images
   sudo chown $USER@docker /mnt/docker-images
+  
   docker run -d --restart=always \
   -v /mnt/docker-images:/var/lib/registry \
-  -v /cert:/cert --name local-registry registry \
-  -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
-  -e REGISTRY_HTTP_TLS_CERTIFICATE=/cert/ca.crt \
+  -v /var/cert:/cert -e REGISTRY_HTTP_TLS_CERTIFICATE=/cert/ca.crt \
   -e REGISTRY_HTTP_TLS_KEY=/cert/ca.key \
-  -p 5000:443
+  -p 5000:5000 --name local-registry registry
   ```
