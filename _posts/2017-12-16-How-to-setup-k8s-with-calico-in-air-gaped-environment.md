@@ -63,15 +63,12 @@ tags: ["Kubenetes","Calico"]
   6. Enable&Run docker and kubelet
   ```
   sudo systemctl enable docker && sudo systemctl start docker
-  sudo systemctl enable kubelet && sudo systemctl start kubelet
+  #sudo systemctl enable kubelet && sudo systemctl start kubelet
   ```
   
   7. Generate certificates for local registry
   ```
-  sudo mkdir /var/cert
-  sudo chown root:docker /var/cert -R
   openssl genrsa -out ca.key 2048
-  
   openssl genrsa -out local-registry.key 2048
   vi local-registry.conf # replace <*> with acturall name
   
@@ -120,6 +117,12 @@ tags: ["Kubenetes","Calico"]
   
   openssl x509  -noout -text -in ./local-registry.crt
   
+  sudo mkdir /etc/docker/certs.d/master:5000 -p
+  sudo cp ca.crt /etc/docker/certs.d/master:5000
+  
+  sudo mkdir /var/certs
+  sudo cp local-registry.* /var/certs
+  
   ```
   
   7. Get local registry image from docker.io and start up
@@ -127,17 +130,27 @@ tags: ["Kubenetes","Calico"]
   This images need firewalld service started up to setup iptable rules
   
   ```
-  docker pull registry:latest
-  docker save docker.io/registry > docker-io-registry.tar
-  scp docker-io-registry.tar user@host:~/
-  ssh user@host
+  docker pull registry:latest #On internet available host
+  docker save docker.io/registry > docker-io-registry.tar #On internet available host
+  scp docker-io-registry.tar user@host:~/ #On internet available host to air-gaped host 
+  ssh user@host
   docker load -i ~/docker-io-registry.tar
   sudo mkdir /mnt/docker-images
   sudo chown $USER@docker /mnt/docker-images
   
-  docker run -d --restart=always \
-  -v /mnt/docker-images:/var/lib/registry \
-  -v /var/cert:/cert -e REGISTRY_HTTP_TLS_CERTIFICATE=/cert/ca.crt \
-  -e REGISTRY_HTTP_TLS_KEY=/cert/ca.key \
-  -p 5000:5000 --name local-registry registry
+   docker run -d --restart=always -v /mnt/docker-images:/var/lib/registry \
+   -v /var/certs:/cert -e REGISTRY_HTTP_TLS_CERTIFICATE=/cert/local-registry.crt \
+   -e REGISTRY_HTTP_TLS_KEY=/cert/local-registry.key \
+   -p 5000:5000 --name local-registry registry
+   
+   docker logs local-registry #check  msg="listening on [::]:5000, tls"
+   
+  ```
+  
+  8.Upload docker images needed by kubenates to local-registry[master:5000]
+  ```
+  docker load -i 
+  docker push master:5000/kube-proxy
+  docker rmi master:5000/kube-proxy:v1.9.0
+  docker pull master:5000/kube-proxy:v1.9.0
   ```
