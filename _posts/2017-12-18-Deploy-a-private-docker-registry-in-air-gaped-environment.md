@@ -35,10 +35,12 @@ scp ${HOME}/rpms/* user@master01.airgaped.org:~/packages
 ```
 
 - [ ] On the **master01.airgaped.org** , run following commands to install Docker environment
+
 ```bash
 cd ~/packages
 sudo rpm -ivh *
 ```
+
 ​	If you encoutner missing depandency error like
 > warning: audit-libs-python-2.7.6-3.el7.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
 > error: Failed dependencies:
@@ -47,9 +49,11 @@ sudo rpm -ivh *
 >    libcgroup is needed by policycoreutils-python-2.5-17.1.el7.x86_64
 
 ​	On the **localhost** you can run
+
 ```bash
 sudo yum update && yum reinstall -y --downloadonly  --downloaddir=${HOME}/rpms missing-packages(like yajl libcgroup)
 ```
+
 ​	And redo the scp command for the missing rpms.
 
 ### 2. Setup Docker environment and Shoot!
@@ -83,9 +87,7 @@ Permissive
 sudo systemctl enable docker && sudo systemctl start docker
 ```
 
-- [ ] On the **master01.airgaped.org** , check whether the docker's cgroupdriver is set to systemd
-
-`--exec-opt native.cgroupdriver=systemd`
+- [ ] On the **master01.airgaped.org** , check whether the docker's cgroupdriver is set to systemd `--exec-opt native.cgroupdriver=systemd`
 
 ```bash
 cat  /usr/lib/systemd/system/docker.service
