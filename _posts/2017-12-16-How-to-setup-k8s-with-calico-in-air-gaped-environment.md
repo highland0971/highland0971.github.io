@@ -71,10 +71,55 @@ tags: ["Kubenetes","Calico"]
   sudo mkdir /var/cert
   sudo chown root:docker /var/cert -R
   openssl genrsa -out ca.key 2048
- 
-  #Replace ${MASTER_IP} with host ip or name 
-  openssl req -x509 -new -nodes -key ca.key -subj "/CN=${MASTER_IP}" -days 10000 -out ca.crt
+  
+  openssl genrsa -out local-registry.key 2048
+  vi local-registry.conf # replace <*> with acturall name
+  
+  #----------
+  #[ req ]
+  #default_bits = 2048
+  #prompt = no
+  #default_md = sha256
+  #req_extensions = req_ext
+  #distinguished_name = dn
 
+  #[ dn ]
+  #C = cn
+  #ST = Tianjin
+  #L = Tianjin
+  #O = TJMCC
+  #OU = JZXN
+  #CN = master
+
+  #[ req_ext ]
+  #subjectAltName = @alt_names
+
+  #[ alt_names ]
+  #DNS.1 = master
+  #DNS.2 = master.default
+  #DNS.3 = master.default.svc
+  #DNS.4 = master.default.svc.cluster
+  #DNS.5 = master.default.svc.cluster.local
+  #IP.1 = 192.168.122.48
+  #IP.2 = 192.168.122.48
+
+  #[ v3_ext ]
+  #authorityKeyIdentifier=keyid,issuer:always
+  #basicConstraints=CA:FALSE
+  #keyUsage=keyEncipherment,dataEncipherment
+  #extendedKeyUsage=serverAuth,clientAuth
+  #subjectAltName=@alt_names
+  
+  #----------
+  
+  openssl req -new -key local-registry.key -out local-registry.csr -config local-registry.conf
+  
+  openssl x509 -req -in local-registry.csr -CA ca.crt -CAkey ca.key \
+  -CAcreateserial -out local-registry.crt -days 10000 \
+  -extensions v3_ext -extfile local-registry.conf
+  
+  openssl x509  -noout -text -in ./local-registry.crt
+  
   ```
   
   7. Get local registry image from docker.io and start up
