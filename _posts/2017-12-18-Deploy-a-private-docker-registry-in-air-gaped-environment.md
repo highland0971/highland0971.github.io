@@ -60,33 +60,31 @@ sudo yum update && yum reinstall -y --downloadonly  --downloaddir=${HOME}/rpms m
 
 - [ ] On the **master01.airgaped.org** , following the procedure defined in [Manage Docker as a non-root user](https://docs.docker.com/engine/installation/linux/linux-postinstall/#manage-docker-as-a-non-root-user) to add docker user group. 
 
-      ```bash
-      sudo groupadd docker
-      sudo usermod -aG docker $USER
-      ```
+```bash
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
       
       You have to re-login to make current $USER group affect.
 
 - [ ] On the **master01.airgaped.org** , disable SeLinux in order to allow docker container access the host path file.
 
-      ```bash
-      sudo setenforce 0
-      sudo sed 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
-      ```
+```bash
+sudo setenforce 0
+sudo sed 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
+```
 
 - [ ] On the **master01.airgaped.org** , enable and start the docker deamon.
 
-      ```bash
-      sudo systemctl enable docker && sudo systemctl start docker
-      ```
+```bash
+sudo systemctl enable docker && sudo systemctl start docker
+```
 
-- [ ] On the **master01.airgaped.org** , check whether the docker's cgroupdriver is set to systemd
+- [ ] On the **master01.airgaped.org** , check whether the docker's cgroupdriver is set to systemd `--exec-opt native.cgroupdriver=systemd`
 
-      `--exec-opt native.cgroupdriver=systemd`
-
-      ```bash
-      cat  /usr/lib/systemd/system/docker.service
-      ```
+```bash
+cat  /usr/lib/systemd/system/docker.service
+```
 
       If not:
 
