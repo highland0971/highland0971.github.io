@@ -147,10 +147,13 @@ tags: ["Kubenetes","Calico"]
    
   ```
   
-  8.Upload docker images needed by kubenates to local-registry[master:5000]
+  8.Upload docker images needed by kubenates to local-registry
+ 
   ```
+  
   docker load -i 
   docker push master:5000/kube-proxy
   docker rmi master:5000/kube-proxy:v1.9.0
   docker pull master:5000/kube-proxy:v1.9.0
+  
   ```
