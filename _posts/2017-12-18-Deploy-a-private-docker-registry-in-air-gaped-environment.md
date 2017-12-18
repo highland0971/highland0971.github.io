@@ -119,6 +119,17 @@ sudo yum update && yum reinstall -y --downloadonly  --downloaddir=${HOME}/rpms m
  ```
 ### 1. Create HTTPS certificates required for docker private registry 
 
+This procedure follows the example on [Openssl certificate creation on k8s official document](https://kubernetes.io/docs/concepts/cluster-administration/certificates/#openssl)
+
+On **master01.airgaped.org** ：
+
+- [ ] Prepare cert storage directory
+
+     ```bash
+     sudo mkdir /usr/lib/certs -p
+     pushd /usr/lib/certs
+     ```
+
 - [ ] Generate CA key file
 
      ```bash
@@ -146,13 +157,59 @@ sudo yum update && yum reinstall -y --downloadonly  --downloaddir=${HOME}/rpms m
 - [ ] Create a config file for generating a Certificate Signing Request (CSR) for  docker registry server
 
       ```bash
+      cat > private-registry-server.conf <<EOF
+      [ req ]
+      default_bits = 2048
+      prompt = no
+      default_md = sha256
+      req_extensions = req_ext
+      distinguished_name = dn
+          
+      [ dn ]
+      C = cn #replace with actual info
+      ST = Tianjin #replace with actual info
+      L = Tianjin #replace with actual info
+      O = Air Gaped Company #replace with actual info
+      OU = Air Gaped team #replace with actual info
+      CN = master01.airgaped.org  #replace with actual registry server name
+          
+      [ req_ext ]
+      subjectAltName = @alt_names
+          
+      [ alt_names ]
+      DNS.1 = master01.airgaped.org #replace with alternative dns resolve name
+      IP.1 = 192.168.122.163 #replace with alternative ip for the registry server
+          
+      [ v3_ext ]
+      authorityKeyIdentifier=keyid,issuer:always
+      basicConstraints=CA:FALSE
+      keyUsage=keyEncipherment,dataEncipherment
+      extendedKeyUsage=serverAuth,clientAuth
+      subjectAltName=@alt_names
 
+      EOF
       ```
 
 - [ ] Generate the certificate signing request based on the config file for docker registry server
 
       ```bash
+      openssl req -new -key  private-registry-server.key \
+      -out private-registry-server.csr \
+      -config private-registry-server.conf
+      ```
 
+- [ ] Sign the registry server certificate with CA cert and docker registry server CSR file
+
+      ```bash
+      openssl x509 -req -in private-registry-server.csr -CA ca.crt -CAkey ca.key \
+      -CAcreateserial -out private-registry-server.crt -days 10000 \
+      -extensions v3_ext -extfile private-registry-server.conf
+      ```
+
+- [ ] Verify the final cert for registry server
+
+      ```bash
+      openssl x509  -noout -text -in private-registry-server.crt
       ```
 
       ​
