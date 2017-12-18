@@ -285,43 +285,43 @@ At this point, you have:
 Now you have to:
 1. **Tag cached image with new registry path** which leads to **registry.airgaped.org**
 
-  ```bash
-  $ docker tag docker.io/registry:latest registry.airgaped.org/registry:latest
-  $ docker images
-  REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE
-  registry.airgaped.org/registry   latest              177391bcf802        2 weeks ago         33.26 MB
-  docker.io/registry               latest              177391bcf802        2 weeks ago         33.26 MB
-  ```
+    ```bash
+    $ docker tag docker.io/registry:latest registry.airgaped.org/registry:latest
+    $ docker images
+    REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE
+    registry.airgaped.org/registry   latest              177391bcf802        2 weeks ago         33.26 MB
+    docker.io/registry               latest              177391bcf802        2 weeks ago         33.26 MB
+    ```
 
 2. Push newly taged image to **registry.airgaped.org**
 
-  ```bash
-  docker push registry.airgaped.org/registry
-  ```
+    ```bash
+    docker push registry.airgaped.org/registry
+    ```
 
 3. Remove cached image on local docker, newly tag **registry.airgaped.org/registry:latest**
 
-  ```bash
-  docker rmi registry.airgaped.org/registry:latest
-  $ docker images
-  REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
-  docker.io/registry   latest              177391bcf802        2 weeks ago         33.26 MB
-  ```
+    ```bash
+    docker rmi registry.airgaped.org/registry:latest
+    $ docker images
+    REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+    docker.io/registry   latest              177391bcf802        2 weeks ago         33.26 MB
+    ```
 
 4. Pull image **registry** from **registry.airgaped.org**
 
-  ```bash
-  $ docker pull registry.airgaped.org/registry
-  Using default tag: latest
-  Trying to pull repository registry.airgaped.org/registry ...
-  latest: Pulling from registry.airgaped.org/registry
-  Digest: sha256:e82c444f6275eaca07889d471943668ac17fd03ea8d863289a54c199ed216332
+    ```bash
+    $ docker pull registry.airgaped.org/registry
+    Using default tag: latest
+    Trying to pull repository registry.airgaped.org/registry ...
+    latest: Pulling from registry.airgaped.org/registry
+    Digest: sha256:e82c444f6275eaca07889d471943668ac17fd03ea8d863289a54c199ed216332
 
-  $ docker images
-  REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE
-  docker.io/registry               latest              177391bcf802        2 weeks ago         33.26 MB
-  registry.airgaped.org/registry   latest              177391bcf802        2 weeks ago         33.26 MB
+    $ docker images
+    REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE
+    docker.io/registry               latest              177391bcf802        2 weeks ago         33.26 MB
+    registry.airgaped.org/registry   latest              177391bcf802        2 weeks ago         33.26 MB
 
-  ```
+    ```
 
 ##### Now, you have a working and verified private registry！
