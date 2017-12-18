@@ -93,15 +93,15 @@ Verify the whether selinux is disabled:
   cat  /usr/lib/systemd/system/docker.service
   ```
 
-If not
+  If not:
 
-- Edit the `/usr/lib/systemd/system/docker.service` file and add `--exec-opt native.cgroupdriver=systemd` to `/usr/lib/systemd/system/docker.service`'s ExecStart strings.
+  - Edit the `/usr/lib/systemd/system/docker.service` file and add `--exec-opt native.cgroupdriver=systemd` to `/usr/lib/systemd/system/docker.service`'s ExecStart strings.
 
-- Restart the docker deamon service with 
+  - Restart the docker deamon service with 
 
-  ```bash 
-  sudo systemctl reload-deamon docker && sudo systemctl restart docker
-  ```
+    ```bash 
+    sudo systemctl reload-deamon docker && sudo systemctl restart docker
+    ```
 
 
 - [ ] On the **master01.airgaped.org** , check whether docker start successfully.
@@ -246,13 +246,13 @@ On **master01.airgaped.org** ：
     docker logs local-registry
     ```
 
-You should see the following output like,with **listening on [::]:443**
+    You should see the following output like,with **listening on [::]:443**
 
-  > time="2017-12-18T12:57:53Z" level=warning msg="No HTTP secret provided - generated random secret. This may cause problems with uploads if multiple registries are behind a load-balancer. To provide a shared secret, fill in http.secret in the configuration file or set the REGISTRY_HTTP_SECRET environment variable." go.version=go1.7.6 instance.id=df382424-0e5d-49ad-b758-2b7b3e92d32f version=v2.6.2
-  > time="2017-12-18T12:57:53Z" level=info msg="redis not configured" go.version=go1.7.6 instance.id=df382424-0e5d-49ad-b758-2b7b3e92d32f version=v2.6.2
-  > time="2017-12-18T12:57:53Z" level=info msg="Starting upload purge in 37m0s" go.version=go1.7.6 instance.id=df382424-0e5d-49ad-b758-2b7b3e92d32f version=v2.6.2
-  > time="2017-12-18T12:57:54Z" level=info msg="using inmemory blob descriptor cache" go.version=go1.7.6 instance.id=df382424-0e5d-49ad-b758-2b7b3e92d32f version=v2.6.2
-  > time="2017-12-18T12:57:54Z" level=info **msg="listening on [::]:443, tls"** go.version=go1.7.6 instance.id=df382424-0e5d-49ad-b758-2b7b3e92d32f version=v2.6.2
+    > time="2017-12-18T12:57:53Z" level=warning msg="No HTTP secret provided - generated random secret. This may cause problems with uploads if multiple registries are behind a load-balancer. To provide a shared secret, fill in http.secret in the configuration file or set the REGISTRY_HTTP_SECRET environment variable." go.version=go1.7.6 instance.id=df382424-0e5d-49ad-b758-2b7b3e92d32f version=v2.6.2
+    > time="2017-12-18T12:57:53Z" level=info msg="redis not configured" go.version=go1.7.6 instance.id=df382424-0e5d-49ad-b758-2b7b3e92d32f version=v2.6.2
+    > time="2017-12-18T12:57:53Z" level=info msg="Starting upload purge in 37m0s" go.version=go1.7.6 instance.id=df382424-0e5d-49ad-b758-2b7b3e92d32f version=v2.6.2
+    > time="2017-12-18T12:57:54Z" level=info msg="using inmemory blob descriptor cache" go.version=go1.7.6 instance.id=df382424-0e5d-49ad-b758-2b7b3e92d32f version=v2.6.2
+    > time="2017-12-18T12:57:54Z" level=info **msg="listening on [::]:443, tls"** go.version=go1.7.6 instance.id=df382424-0e5d-49ad-b758-2b7b3e92d32f version=v2.6.2
 
 - [ ] Append registry.airgaped.org domain to /etc/hosts
 
