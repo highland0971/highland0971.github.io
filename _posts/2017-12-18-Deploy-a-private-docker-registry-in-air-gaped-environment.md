@@ -74,7 +74,7 @@ tags: ["Docker","Registry"]
   sudo sed 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
   ```
 
-Verify the whether selinux is disabled:
+  Verify the whether selinux is disabled:
 
   ```bash
   $ getenforce
@@ -202,25 +202,25 @@ On **master01.airgapped.org** ：
 
 - [ ] Generate the certificate signing request based on the config file for docker registry server
 
-      ```bash
-      sudo openssl req -new -key  private-registry-server.key \
-      -out private-registry-server.csr \
-      -config private-registry-server.conf
-      ```
+  ```bash
+  sudo openssl req -new -key  private-registry-server.key \
+  -out private-registry-server.csr \
+  -config private-registry-server.conf
+  ```
 
 - [ ] Sign the registry server certificate with CA cert and docker registry server CSR file
 
-      ```bash
-      sudo openssl x509 -req -in private-registry-server.csr -CA ca.crt -CAkey ca.key \
-      -CAcreateserial -out private-registry-server.crt -days 10000 \
-      -extensions v3_ext -extfile private-registry-server.conf
-      ```
+  ```bash
+  sudo openssl x509 -req -in private-registry-server.csr -CA ca.crt -CAkey ca.key \
+  -CAcreateserial -out private-registry-server.crt -days 10000 \
+  -extensions v3_ext -extfile private-registry-server.conf
+  ```
 
 - [ ] Verify the final cert for registry server
 
-      ```bash
-      openssl x509  -noout -text -in private-registry-server.crt
-      ```
+  ```bash
+  openssl x509  -noout -text -in private-registry-server.crt
+  ```
 
 ### 2. Start private registry
 - [ ] Copy the CA certificate to docker's certs directory to avoid insecur repository error, the directory which certs resides in must have the same hostname with the private registry domain name.
@@ -269,9 +269,7 @@ On **master01.airgapped.org** ：
 
 ## 3. Push your first image to private registry and verify
 
-On **master01.airgapped.org** ：
-
-At this point, you have: 
+On **master01.airgapped.org**, At this point, you have: 
 
 - one available private registry which is host on **master01.airgapped.org** and with a dedicate domain name **registry.airgapped.org** with TLS enabled, listening on port 443.
 - one local image named **docker.io/registry:latest** cached on **master01.airgapped.org** , as:
@@ -294,13 +292,11 @@ Now you have to:
     ```
 
 2. Push newly taged image to **registry.airgapped.org**
-
     ```bash
     docker push registry.airgapped.org/registry
     ```
 
 3. Remove cached image on local docker, newly tag **registry.airgapped.org/registry:latest**
-
     ```bash
     docker rmi registry.airgapped.org/registry:latest
     $ docker images
