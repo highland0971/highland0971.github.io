@@ -22,7 +22,7 @@ tags: ["Docker","Registry"]
 - You'd have to obtain a **PURE** linux environment which **HAVE** Internet access without any post-installed packages as was installed in **master01.airgapped.org**.  Otherwise you may encounter failed dependencies for docker in the **master01.airgapped.org**.
 - We assume that you have a **PURE** Internet access availabe host named **localhost**.
 
-### 1. Download and install the required packages for Docker 
+### 1. Download and install the required packages for Docker
 - [ ] On the **localhost** , run following commands:
 
   ```bash
@@ -58,7 +58,7 @@ tags: ["Docker","Registry"]
 
 ### 2. Setup Docker environment and Shoot!
 
-- [ ] On the **master01.airgapped.org** , following the procedure defined in [Manage Docker as a non-root user](https://docs.docker.com/engine/installation/linux/linux-postinstall/#manage-docker-as-a-non-root-user) to add docker user group. 
+- [ ] On the **master01.airgapped.org** , following the procedure defined in [Manage Docker as a non-root user](https://docs.docker.com/engine/installation/linux/linux-postinstall/#manage-docker-as-a-non-root-user) to add docker user group.
 
   ```bash
   sudo groupadd docker
@@ -71,7 +71,7 @@ tags: ["Docker","Registry"]
 
   ```bash
   sudo setenforce 0
-  sudo sed 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
+  sudo sed 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config > /etc/selinux/config
   ```
 
   Verify the whether selinux is disabled:
@@ -97,9 +97,9 @@ tags: ["Docker","Registry"]
 
   - Edit the `/usr/lib/systemd/system/docker.service` file and add `--exec-opt native.cgroupdriver=systemd` to `/usr/lib/systemd/system/docker.service`'s ExecStart strings.
 
-  - Restart the docker deamon service with 
+  - Restart the docker deamon service with
 
-    ```bash 
+    ```bash
     sudo systemctl reload-deamon docker && sudo systemctl restart docker
     ```
 
@@ -126,7 +126,7 @@ tags: ["Docker","Registry"]
    ```bash
     docker load -i docker-io.registry.tar
    ```
-### 1. Create HTTPS certificates required for docker private registry 
+### 1. Create HTTPS certificates required for docker private registry
 
 This procedure follows the example on [Openssl certificate creation on k8s official document](https://kubernetes.io/docs/concepts/cluster-administration/certificates/#openssl)
 
@@ -269,7 +269,7 @@ On **master01.airgapped.org** ：
 
 ## 3. Push your first image to private registry and verify
 
-On **master01.airgapped.org**, At this point, you have: 
+On **master01.airgapped.org**, At this point, you have:
 
 - one available private registry which is host on **master01.airgapped.org** and with a dedicate domain name **registry.airgapped.org** with TLS enabled, listening on port 443.
 - one local image named **docker.io/registry:latest** cached on **master01.airgapped.org** , as:
@@ -323,4 +323,3 @@ Now you have to:
 ##### Now, you have a working and verified private registry！
 
 For securer docker access, you shall follow the instruction list on [Restricting access](https://docs.docker.com/registry/deploying/#restricting-access).
-
