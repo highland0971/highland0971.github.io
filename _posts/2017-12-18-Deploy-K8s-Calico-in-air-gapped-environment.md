@@ -194,6 +194,7 @@ tar -ztf all-in-one.tar.gz
 
 - Distribute to target installation base host
 You can change the distribution method depends on your environment
+
 ```bash
 # define ${INSTALLATION_BASE} as you wanted
 scp all-in-one.tar.gz ${INSTALLATION_BASE}:~/
@@ -203,6 +204,7 @@ ssh ${INSTALLATION_BASE} tar -zxf ~/all-in-one.tar.gz
 # Launch the following scripts on **INSTALLATION_BASE** host
 
 ## 3. Prepare kubelet runtime environment
+
 ```bash
 for node in ${K8S_NODES} ;do
   echo Disable swap file on ${node}
@@ -221,7 +223,8 @@ done
 ```
 
 ## 4. Install `Docker`
-Install docker on target hosts
+Install `Docker` on target hosts
+
 ```bash
 # Scp docker rpm packages to each nodes, passwdless environment must be set previously for root user
 # Execute current command as root
@@ -240,6 +243,7 @@ for node in ${K8S_NODES} ; do
 done
 ```
 ## 5. Setup private registry service
+
 ```bash
 cd
 cp all-in-one/bin/cfssl* /usr/local/bin/
@@ -334,6 +338,7 @@ ssh ${PRIVATE_REGISTRY_SERV} docker logs private-registry
 ```
 
 ## 6. Distribute K8s binaries and images to nodes
+
 ```bash
 cd
 
@@ -390,6 +395,7 @@ ssh ${PRIVATE_REGISTRY_SERV} rm -rf images
 
 ## 7. Setup `etcd` daemon
 - prepare certificates
+
 ```bash
 cd
 mkdir -p certs/etcd
@@ -452,6 +458,7 @@ done
 ```
 
 - prepare binaries and configs
+
 ```bash
 cd
 tar -zxf  all-in-one/bin/etcd-v3.2.12-linux-amd64.tar.gz
@@ -529,6 +536,7 @@ done
 ```
 
 ## 8. Prepare certificate for `K8s`
+
 ```bash
 cd
 mkdir -p certs/k8s
@@ -721,6 +729,7 @@ cfssl gencert -ca=certs/etcd/etcd-ca.pem \
 
 ## 9. Prepare kubeconfig file for K8s cluster
 - Prepare kubeconfig file for each component
+
 ```bash
 cd
 # For admin
@@ -844,6 +853,7 @@ ls certs/k8s
 ```
 
 - Distribute certificate and kubeconfig file to master and nodes
+
 ```bash
 
 #For non-master node, without kubeconfig file,only copy bootstrap.conf
@@ -875,6 +885,7 @@ scp certs/k8s/token.csv ${KUBE_MASTER_SERV_01}:/etc/kubernetes
 ```
 
 ## 10. Setup `apiserver` `controller-manager` `scheduler` static pods yaml configs
+
 ```bash
 cd
 mkdir kubernetes/manifests -p
@@ -968,6 +979,7 @@ spec:
 EOF
 ```
 - For `controller manager`
+
 ```bash
 cat > kubernetes/manifests/kube-controller-manager.yaml << EOF
 apiVersion: v1
@@ -1049,6 +1061,7 @@ EOF
 ```
 
 - For `scheduler`
+
 ```bash
 cat > kubernetes/manifests/kube-scheduler.yaml << EOF
 apiVersion: v1
@@ -1104,12 +1117,14 @@ spec:
 EOF
 ```
 - Distribute to master node
+
 ```bash
 ssh ${KUBE_MASTER_SERV_01} mkdir -p /etc/kubernetes/manifests
 scp kubernetes/manifests/*.yaml ${KUBE_MASTER_SERV_01}:/etc/kubernetes/manifests
 ```
 
 ## 11. Setup and boot the `kubelet` & **cluster** with systemd service
+
 ```bash
 cd
 mkdir kubernetes/systemd/ -p
@@ -1160,6 +1175,7 @@ done
 
 ## 12. Setup admin cli environment and check cluster status
 - Setup the admin cli environment with `amdin.con` file
+
 ```bash
 ssh ${KUBE_MASTER_SERV_01} mkdir ~/.kube
 ssh ${KUBE_MASTER_SERV_01} cp /etc/kubernetes/admin.conf ~/.kube/config
@@ -1168,6 +1184,7 @@ ssh ${KUBE_MASTER_SERV_01} kubectl get node
 ssh ${KUBE_MASTER_SERV_01} kubectl -n kube-system get po
 ```
 - The run out result should be like this:
+
 ```bash
 ssh ${KUBE_MASTER_SERV_01} kubectl get cs
 # NAME                 STATUS    MESSAGE              ERROR
@@ -1188,6 +1205,7 @@ ssh ${KUBE_MASTER_SERV_01} kubectl -n kube-system get po
 
 ## 13. Authorize other K8s nodes joining the cluster
 - Add TLS Bootstrapping ClusterRoleBinding to cluster
+
 ```bash
 ssh ${KUBE_MASTER_SERV_01} kubectl create \
   clusterrolebinding kubelet-bootstrap \
@@ -1196,6 +1214,7 @@ ssh ${KUBE_MASTER_SERV_01} kubectl create \
 ```
 
 - Check pending node certificate CSR requests
+
 ```bash
 ssh ${KUBE_MASTER_SERV_01} kubectl get csr
 # NAME                                                   AGE       REQUESTOR           CONDITION
@@ -1221,6 +1240,7 @@ ssh ${KUBE_MASTER_SERV_01} kubectl get nodes
 
 ## 14. Setup `kube-proxy` addon
 Which shall be deployed ahead of `Calico` ,otherwise the `Calico` components would stuck in creating container status.
+
 ```bash
 cd
 #Generate kube proxy certificate
@@ -1363,6 +1383,7 @@ ssh ${KUBE_MASTER_SERV_01} kubectl -n kube-system get po -l k8s-app=kube-proxy
 
 ## 15. `Calico` Standard Hosted Install
 - Generate certificate for calico-etcd-client
+
 ```bash
 cd
 mkdir certs/calico -p
@@ -1621,6 +1642,7 @@ ssh ${KUBE_MASTER_SERV_01} kubectl -n kube-system get po -l k8s-app=kube-dns -o 
 
 ## 17. Check the whole cluster status
 That's all for the cluster deployments, now you can check the overall status in the cluster
+
 ```bash
 ssh ${KUBE_MASTER_SERV_01} kubectl -n kube-system get all
 # NAME             DESIRED   CURRENT   READY     UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
