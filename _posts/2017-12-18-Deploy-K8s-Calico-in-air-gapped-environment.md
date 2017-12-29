@@ -7,6 +7,7 @@ tags: ["Kubenetes","Calico"]
 
 ## 1. Pre-defined environment vars
 - The following pre-defined env-vars should set on the `Internet available host` (for packages and binaries pre-download) and `INSTALLATION_BASE` host (Which can access air-gapped deployment cluster, for installation launch.)
+
 ```bash
 export DOCKER_CLIENT_USER=highland #For users which need docker CLI access
 export K8S_NODE01=jin #Kubernetes target deploy node
@@ -43,6 +44,10 @@ export CLUSTER_DNS_IP=172.16.0.10 #The kubernetes kube-dns service address
 export K8S_BASE_VER=v1.9.0
 export K8S_DNS_VER=1.14.7
 export K8S_PAUSE_VER=3.1
+export CALICO_CONTROLLER_VER=v1.0.2
+export CALICO_NODE_VER=v2.6.5
+export CALICO_CNI_VER=v1.11.2
+
 export K8S_PROXY_VER=${K8S_BASE_VER}
 export K8S_PAUSE_IMG_NAME=pause-amd64
 export K8S_PROXY_IMG_NAME=kube-proxy
@@ -51,15 +56,15 @@ export K8S_DNSMASQ_IMG_NAME=k8s-dns-dnsmasq-nanny-amd64
 export K8S_SIDECAR_IMG_NAME=k8s-dns-sidecar-amd64
 
 export CALICO_CONTROLLER_IMG_NAME=kube-controllers
-export CALICO_CONTROLLER_VER=v1.0.2
 export CALICO_NODE_IMAGE_NAME=node
-export CALICO_NODE_VER=v2.6.5
 export CALICO_CNI_IMAGE_NAME=cni
-export CALICO_CNI_VER=v1.11.2
+
 
 export GCR_IMAGES="kube-aggregator kube-controller-manager ${K8S_PROXY_IMG_NAME} kube-scheduler kube-apiserver"
 ```
+
 - Run this on installation base host(**INSTALLATION_BASE**)
+
 ```bash
 #Change the hostname on each node if needed
 for node in $K8S_NODES ; do
@@ -75,8 +80,10 @@ for node in $K8S_NODES ; do
   ssh $node "echo $K8S_NODE04_IP $K8S_NODE04 >> /etc/hosts"
 done
 ```
+
 ## 2. Download required images and binaries for **K8S**,**Etcd**,**Docker**,**Calico**,**cfssl**
 - Run the following scripts on Internet available hosts with `Docker` pre-installed
+
 ```bash
 cd
 mkdir -p all-in-one/bin
