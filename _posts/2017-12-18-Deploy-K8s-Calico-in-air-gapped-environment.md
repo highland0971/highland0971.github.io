@@ -204,7 +204,7 @@ scp all-in-one.tar.gz ${INSTALLATION_BASE}:~/
 ssh ${INSTALLATION_BASE} tar -zxf ~/all-in-one.tar.gz
 ```
 
-# Launch the following scripts on **INSTALLATION_BASE** host
+# The following scripts executed on **INSTALLATION_BASE**
 
 ## 3. Prepare kubelet runtime environment
 
@@ -1230,6 +1230,7 @@ ssh ${KUBE_MASTER_SERV_01} kubectl get csr
 ```
 
 - Authorize node CSR requests
+
 ```bash
 ssh ${KUBE_MASTER_SERV_01} "kubectl get csr | awk '/Pending/ {print \$1}' | xargs kubectl certificate approve"
 # certificatesigningrequest "node-csr-gO_HGaj_cJdNzjx3AxjmMtKBNfiBRUdIfBn0HdDyWtM" approved
