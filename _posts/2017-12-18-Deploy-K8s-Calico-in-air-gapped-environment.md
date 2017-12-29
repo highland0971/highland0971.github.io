@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Deploy K8s + Calico network in air-gapped environment"
+title: "Deploy K8s + Calico Network in air-gapped environment within 20 minutes"
 date: 2017-12-29 14:16:01 +0800
 tags: ["Kubenetes","Calico"]
 ---
@@ -252,6 +252,7 @@ ssh ${PRIVATE_REGISTRY_SERV} docker load -i ~/docker-io.registry.tar
 ssh ${PRIVATE_REGISTRY_SERV} mkdir /etc/docker/ssl -p
 
 mkdir certs/docker -p
+#Generate docker CA
 cat <<EOF > certs/ca-config.json
 {
   "signing":{
@@ -291,8 +292,10 @@ cat <<EOF > certs/docker/docker-ca-csr.json
   ]
 }
 EOF
+
 cfssl gencert -initca certs/docker/docker-ca-csr.json | cfssljson -bare certs/docker/docker-ca
 
+#Generate docker TLS certificates
 cat <<EOF > certs/docker/private-registry-csr.json
 {
   "CN":"private-registry",
@@ -323,7 +326,7 @@ cfssl gencert -ca=certs/docker/docker-ca.pem \
   -profile=default \
   certs/docker/private-registry-csr.json | cfssljson -bare certs/docker/private-registry
 
-#Make private registry trusted in the nodes
+#Make private registry trusted in the nodes by copy Docker CA file to /etc/docker/certs.d/${PRIVATE_REGISTRY}
 for node in ${K8S_NODES} ; do
   ssh ${node} mkdir -p /etc/docker/certs.d/${PRIVATE_REGISTRY}
   scp certs/docker/docker-ca.pem ${node}:/etc/docker/certs.d/${PRIVATE_REGISTRY}/ca.crt
@@ -378,7 +381,6 @@ ssh ${PRIVATE_REGISTRY_SERV} docker rmi  ${PRIVATE_REGISTRY}/calico/${CALICO_NOD
 ssh ${PRIVATE_REGISTRY_SERV} docker load -i images/calico_${CALICO_CNI_IMAGE_NAME}:${CALICO_CNI_VER}.tar
 ssh ${PRIVATE_REGISTRY_SERV} docker push  ${PRIVATE_REGISTRY}/calico/${CALICO_CNI_IMAGE_NAME}:${CALICO_CNI_VER}
 ssh ${PRIVATE_REGISTRY_SERV} docker rmi  ${PRIVATE_REGISTRY}/calico/${CALICO_CNI_IMAGE_NAME}:${CALICO_CNI_VER}
-
 
 export gcr=gcr.io/google_containers
 for img in ${GCR_IMAGES} ; do
@@ -892,6 +894,7 @@ mkdir kubernetes/manifests -p
 ```
 
 - For `apiserver` pod
+
 ```bash
 cat > kubernetes/manifests/kube-apiserver.yaml << EOF
 apiVersion: v1
@@ -1243,8 +1246,9 @@ Which shall be deployed ahead of `Calico` ,otherwise the `Calico` components wou
 
 ```bash
 cd
-#Generate kube proxy certificate
 mkdir -p kubernetes/addons
+
+#Generate kube proxy certificate
 cat <<EOF > certs/k8s/kube-proxy-csr.json
 {
   "CN":"system:kube-proxy",
@@ -1405,7 +1409,8 @@ cfssl gencert -ca=certs/etcd/etcd-ca.pem \
 
 ```
 - Modify preset yaml pattern
-Setup Calico network in IPIP `OFF` mode
+Setup Calico network in IPIP `OFF` mode,the pattern is fetched from [Standard Hosted Install](https://docs.projectcalico.org/v2.6/getting-started/kubernetes/installation/hosted/hosted) - [calico.yaml](https://docs.projectcalico.org/v2.6/getting-started/kubernetes/installation/hosted/calico.yaml)
+
 ```bash
 export ETCD_CA_BASE64=`cat ${HOME}/certs/etcd/etcd-ca.pem|base64 -w 0`
 export ETCD_CERT_BASE64=`cat ${HOME}/certs/calico/calico-etcd-client.pem|base64 -w 0`
@@ -1423,10 +1428,10 @@ sed "s#192.168.0.0/16#${KUBE_CLUSTER_POD_CIDR}#" |\
 sed "s#quay.io/calico/${CALICO_CNI_IMAGE_NAME}:${CALICO_CNI_VER}#${PRIVATE_REGISTRY}/calico/${CALICO_CNI_IMAGE_NAME}:${CALICO_CNI_VER}#g" |\
 sed "s#quay.io/calico/${CALICO_CONTROLLER_IMG_NAME}:${CALICO_CONTROLLER_VER}#${PRIVATE_REGISTRY}/calico/${CALICO_CONTROLLER_IMG_NAME}:${CALICO_CONTROLLER_VER}#g" |\
 sed "/CALICO_IPV4POOL_IPIP/{n;d}" |\
-sed '/CALICO_IPV4POOL_IPIP/a\              value: "off"' \
-> all-in-one/configs/calico-deploy.yaml
+sed '/CALICO_IPV4POOL_IPIP/a\              value: "off"' > \
+all-in-one/configs/calico-deploy.yaml
 
-
+#Distribute config file to master node
 scp all-in-one/configs/calico-deploy.yaml ${KUBE_MASTER_SERV_01}:/etc/kubernetes/addons
 scp all-in-one/configs/calico-rbac.yaml ${KUBE_MASTER_SERV_01}:/etc/kubernetes/addons
 ssh ${KUBE_MASTER_SERV_01} kubectl apply -f /etc/kubernetes/addons/calico-rbac.yaml
@@ -1450,6 +1455,7 @@ ssh ${KUBE_MASTER_SERV_01} kubectl -n kube-system get po
 ```
 
 ## 16. Setup `kube-dns` addon
+
 ```bash
 cat > kubernetes/addons/kube-dns.yml << EOF
 apiVersion: v1
