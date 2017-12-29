@@ -4,6 +4,9 @@ title: "Deploy K8s + Calico Network in air-gapped environment within 20 minutes"
 date: 2017-12-29 14:16:01 +0800
 tags: ["Kubenetes","Calico"]
 ---
+This is a verified installation documents for `K8S 1.9.0` + `Calico 2.6.5` + `Docker 1.12.6` + `etcd 3.2.12` + `kube-dns 1.14.7`.
+
+In this article we focus on how to setup a complete functional [Kubernetes](https://kubernetes.io/) cluster with [Calico](https://docs.projectcalico.org/v2.6/introduction/) Network solution and [Docker Private Registry](https://docs.docker.com/registry/deploying/) in an air-gapped environment, which is the common scene for lots of companies.
 
 ## 1. Pre-defined environment vars
 - The following pre-defined env-vars should set on the `Internet available host` (for packages and binaries pre-download) and `INSTALLATION_BASE` host (Which can access air-gapped deployment cluster, for installation launch.)
