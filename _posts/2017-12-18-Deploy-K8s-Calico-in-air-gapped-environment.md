@@ -62,7 +62,6 @@ export CALICO_CONTROLLER_IMG_NAME=kube-controllers
 export CALICO_NODE_IMAGE_NAME=node
 export CALICO_CNI_IMAGE_NAME=cni
 
-
 export GCR_IMAGES="kube-aggregator kube-controller-manager ${K8S_PROXY_IMG_NAME} kube-scheduler kube-apiserver"
 ```
 
