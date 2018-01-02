@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Deploy kubernetes-dashboard in air-gapped environment"
-date: 2018-01-24 10:48:01 +0800
+date: 2018-01-02 10:48:01 +0800
 tags: ["Kubenetes","Dashboard"]
 ---
 
@@ -160,7 +160,7 @@ After successfully install, restart the browser and visit the URL again, you wil
 ## 4. Supply the correct token to login
 When you successfully opened the Login View, you will be promoted to supply kubeconfig file or token to login, simplely choose Token. The reason why and how to pick/create token is described [here](https://github.com/kubernetes/dashboard/issues/2474) and [here](https://github.com/kubernetes/dashboard/wiki/Access-control) and [here](https://github.com/kubernetes/dashboard/wiki/Creating-sample-user).
 
-However, you may try to issue a new user with token and kubeconfig, as describd in [Preparing Credentials](https://kubernetes.io/docs/getting-started-guides/scratch/#preparing-certs).
+However, you may try to issue a new user with token and kubeconfig, describd in [Preparing Credentials](https://kubernetes.io/docs/getting-started-guides/scratch/#preparing-certs).
 
 **References**
 - [Installation](https://github.com/kubernetes/dashboard/wiki/Installation)
