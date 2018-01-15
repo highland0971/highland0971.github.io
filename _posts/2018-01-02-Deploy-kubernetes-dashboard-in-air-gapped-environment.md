@@ -5,7 +5,7 @@ date: 2018-01-02 10:48:01 +0800
 tags: ["Kubenetes","Dashboard"]
 ---
 
-This article describes kubernetes dashboard deploymen in an air-gapped environments, based on the [pre-installed k8s cluster](https://highland0971.github.io/2017/12/29/Deploy-K8s-Calico-in-air-gapped-environment.html)
+This article describes kubernetes dashboard deployment in an air-gapped environments, based on the [pre-installed k8s cluster](https://highland0971.github.io/2017/12/29/Deploy-K8s-Calico-in-air-gapped-environment.html)
 
 ## 1. Pre-defined environment vars
 We use the pre-defined vars according to article [Deploy K8s + Calico Network in air-gapped environment within 20 minutes](https://highland0971.github.io/2017/12/29/Deploy-K8s-Calico-in-air-gapped-environment.html), and add extra vars for dashboard.
@@ -72,7 +72,7 @@ export K8S_DASHBOARD_VER=v1.8.1
 
 ## 1. Prepare required images and yaml config
 - Download kubernetes-dashboard container image and push to private registry
-We omitted the docker save & load procedure from Internet available host to air-gappd cluster `INSTALLATION_BASE`, you can refer artical revelent section in [pre-installed k8s cluster](https://highland0971.github.io/2017/12/29/Deploy-K8s-Calico-in-air-gapped-environment.html).
+We omitted the docker save & load procedure from Internet available host to air-gapped cluster `INSTALLATION_BASE`, you can refer artical revelent section in [pre-installed k8s cluster](https://highland0971.github.io/2017/12/29/Deploy-K8s-Calico-in-air-gapped-environment.html).
 
 ```bash
 #For kubernetes dashboard image

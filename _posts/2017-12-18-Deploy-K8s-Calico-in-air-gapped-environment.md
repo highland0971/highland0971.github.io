@@ -737,6 +737,10 @@ cfssl gencert -ca=certs/etcd/etcd-ca.pem \
 ```bash
 cd
 # For admin
+export TOKEN=$(head -c 16 /dev/urandom | od -An -t x | tr -d ' ')
+cat <<EOF > certs/k8s/token.csv
+${TOKEN},kube-admin,10002,"system:masters"
+EOF
 kubernetes/server/bin/kubectl config set-cluster kubernetes \
 --certificate-authority=certs/k8s/k8s-ca.pem \
 --embed-certs=true \
@@ -749,6 +753,10 @@ kubernetes/server/bin/kubectl config set-credentials kubernetes-admin \
 --embed-certs=true \
 --kubeconfig=certs/k8s/admin.conf
 
+kubernetes/server/bin/kubectl config set-credentials kubernetes-admin \
+--token=${TOKEN} \
+--kubeconfig=certs/k8s/admin.conf
+
 kubernetes/server/bin/kubectl config set-context default \
 --cluster=kubernetes \
 --user=kubernetes-admin \
@@ -759,7 +767,7 @@ kubernetes/server/bin/kubectl config use-context default \
 
 # For bootstrap
 export BOOTSTRAP_TOKEN=$(head -c 16 /dev/urandom | od -An -t x | tr -d ' ')
-cat <<EOF > certs/k8s/token.csv
+cat <<EOF >> certs/k8s/token.csv
 ${BOOTSTRAP_TOKEN},kubelet-bootstrap,10001,"system:kubelet-bootstrap"
 EOF
 
