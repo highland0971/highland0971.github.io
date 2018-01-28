@@ -76,3 +76,17 @@ salt '*' test.ping
 # shui:
 #     True
 ```
+
+## 5. Run commands in cluster
+
+```bash
+salt '*' cmd.run 'hostname'
+# shui:
+#     shui
+# huo:
+#     huo
+# mu:
+#     mu
+# jin:
+#     jin
+```
