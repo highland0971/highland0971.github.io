@@ -36,6 +36,7 @@ export PATH=$PATH:/opt/rh/devtoolset-6/root/bin/:${HOME}/opt/cmake-3.10.2-Linux-
 
 ```bash
 export BOOST_ROOT=${HOME}/opt/boost_1_64_0
+
 curl -L https://sourceforge.net/projects/boost/files/boost/1.64.0/boost_1_64_0.tar.bz2 > boost_1.64.0.tar.bz2
 tar xvf boost_1.64.0.tar.bz2
 cd boost_1_64_0/
@@ -64,8 +65,9 @@ git clone --depth 1 --single-branch --branch release_40 https://github.com/llvm-
 cd llvm/tools
 git clone --depth 1 --single-branch --branch release_40 https://github.com/llvm-mirror/clang.git
 cd ${HOME}/wasm-compiler/build
-cmake -G "Unix Makefiles" -DLLVM_ENABLE_RTTI=ON -DLLVM_TARGETS_TO_BUILD= -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=WebAssembly -DCMAKE_BUILD_TYPE=Release ../llvm
+cmake -G "Unix Makefiles" -DLLVM_ENABLE_RTTI=ON -DLLVM_TARGETS_TO_BUILD='host' -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=WebAssembly -DCMAKE_BUILD_TYPE=Release ../llvm
 sudo make -j4 install
+
 export WASM_LLVM_CONFIG=/usr/local/bin/llvm-config
 ```
 
@@ -80,3 +82,6 @@ cmake -DBOOST_INCLUDEDIR=${BOOST_ROOT}/include/boost \
 -DBOOST_LIBRARYDIR=${BOOST_ROOT}/lib  ..
 make -j4
 ```
+
+## Start your first node
+Please refer to [official documents](https://github.com/EOSIO/eos/wiki/Local-Environment#4-creating-and-launching-a-single-node-testnet).
