@@ -146,7 +146,7 @@ cmake -G "Unix Makefiles" -DLLVM_ENABLE_RTTI=ON \
 
 sudo make -j4 install
 
-export WASM_LLVM_CONFIG=/usr/local/bin/llvm-config
+# export WASM_LLVM_CONFIG=/usr/local/bin/llvm-config
 ```
 
 ## Compile EOS.IO
