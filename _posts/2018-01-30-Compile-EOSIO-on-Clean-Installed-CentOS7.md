@@ -26,6 +26,8 @@ curl -L https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.tar.gz -o cmake-
 tar -zxf cmake-3.10.2-Linux-x86_64.tar.gz -C ${HOME}/opt
 
 export PATH=$PATH:/opt/rh/devtoolset-6/root/bin/:${HOME}/opt/cmake-3.10.2-Linux-x86_64/bin/
+
+scl enable devtoolset-6 bash
 ```
 
 ## Install EOS.IO dependencies
